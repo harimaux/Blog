@@ -2,7 +2,38 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div id="homeVide">
+    <video autoplay muted loop>
+        <source src="/Video/Home/home.mp4" type="video/mp4">
+    </video>
+</div>*@
+
+<div class="homeMain">
+
+    <div class="homeTextInfo">
+        <h1>Blog Space</h1>
+        <p>
+            Join our vibrant community of readers and be part of a space where knowledge is shared, experiences are celebrated, and passions are ignited. Explore our collection of blogs, immerse yourself in captivating narratives, and embark on a journey of discovery.
+
+            Come on in and let the world of words and images unfold before your eyes. Start exploring now!
+        </p>
+        <a class="buttonCustom1" asp-area="Identity" asp-page="/Account/Register">Join Blog Space</a>
+    </div>
+@*
+    <div class="homeImage">
+        <img src="/Images/Home/blog235235235.jpg"/>
+    </div>
+*@
 </div>
+
+@*Form for uploading photos*@
+@*<form method="post" enctype="multipart/form-data">
+    <!-- Other input fields for title, content, etc. -->
+
+    <div class="form-group">
+        <label for="photo">Photo:</label>
+        <input type="file" id="photo" name="photo">
+    </div>
+
+    <button type="submit">Create Post</button>
+</form>*@
