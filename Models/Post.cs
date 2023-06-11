@@ -22,5 +22,8 @@ namespace Blog.Models
 
         // Navigation property for the owner (user)
         public virtual IdentityUser Owner { get; set; }
+
+        [Required]
+        public byte[] PostImage { get; set; }
     }
 }
