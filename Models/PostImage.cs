@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Models
 {
-    public class Post
+    public class PostImage
     {
-        [Key]
         public int Id { get; set; }
-
-        public string? Title { get; set; }
-
-        public string? Content { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
 
         [ForeignKey("Owner")]
         public string? OwnerId { get; set; }
@@ -21,6 +17,9 @@ namespace Blog.Models
         // Navigation property for the owner (user)
         public virtual IdentityUser? Owner { get; set; }
 
-        public string? Category { get; set; }
+        public byte[]? ImageFile { get; set; }
+
+        [NotMapped]
+        public IFormFile? PostImageFile { get; set; }
     }
 }

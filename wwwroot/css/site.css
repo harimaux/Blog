@@ -125,7 +125,6 @@ footer {
     margin-bottom: 10px;
 }
 
-
 /* ------------------- PRIVACY POLICY ------------------- */
 
 .privacyPolicyText {
@@ -168,4 +167,10 @@ footer {
 
 .homeTextInfo p {
    margin-bottom: 3rem;
+}
+
+/* ------------------- MY BLOG ------------------- */
+
+.myBlogSpaceMain {
+    margin: 4rem;
 }

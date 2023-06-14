@@ -1,0 +1,91 @@
+﻿@model Blog.Models.MainVM
+
+@*
+
+*@
+@{
+}
+
+<div class="myBlogSpaceMain">
+
+    <h1>My Blog Space</h1>
+
+    <div class="myBlogCreatePostFormBox">
+        <form id="createPostForm" method="post" enctype="multipart/form-data" asp-action="CreatePost">
+            <input type="text" name="Title" placeholder="Title" />
+            <input type="text" name="Content" placeholder="Content" />
+            <input type="file" name="PostImageToForm"><br />
+            <button type="submit">Sent</button>
+        </form>
+    </div>
+</div>
+
+<div id="partialViewContainer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@*<script>
+    $(document).ready(function () {
+        // Handle form submission
+        $('#createPostForm').submit(function (event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = new FormData(form[0]);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // Extract the necessary data from the response
+                    var title = data.PostModel[0].Title;
+                    var content = data.PostModel[0].Content;
+
+                    // Create a new HTML element to display the post details
+                    var postDetails = $('<div>').addClass('post-details');
+                    postDetails.append($('<h2>').text(title));
+                    postDetails.append($('<p>').text(content));
+
+                    // Update the partial view container with the post details
+                    $('#partialViewContainer').html(postDetails);
+                },
+                error: function () {
+                    // Handle error if necessary
+                }
+            });
+        });
+    });
+
+</script>*@
+
+<script>
+    $(document).ready(function () {
+        // Handle form submission
+        $('#createPostForm').submit(function (event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = new FormData(form[0]);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // Update the partial view with the received data
+                    $('#partialViewContainer').html(data);
+                },
+                error: function () {
+                    // Handle error if necessary
+                }
+            });
+        });
+    });
+</script>
