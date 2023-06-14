@@ -1,13 +1,10 @@
-﻿@model Blog.Models.MainVM
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
+@model Blog.Models.MainVM
 
-<h1>Partial view Post</h1>
 
-@*@if(Model.PostModel.PostImage != null)
-{
-    <p>Image should be here</p>
-    <img src="data:image;base64,@Convert.ToBase64String(Model.PostModel.PostImage)" alt="Post Image">
-}
-*@
+    
+<h1>@Model.PostModel.Title</h1>
+<p>@Model.PostModel.Content</p>
+
+<img src="data:image;base64,@Convert.ToBase64String(@Model.ImagePreview!)" alt="Post Image">
+

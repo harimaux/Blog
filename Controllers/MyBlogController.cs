@@ -36,8 +36,11 @@ namespace Blog.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
+            var vm = new MainVM();
 
-            return View();
+            vm.SetPost = false;
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -80,6 +83,7 @@ namespace Blog.Controllers
                 var newVM = new MainVM
                 {
                     PostModel = newPost,
+                    ImagePreview = newPostImage.ImageFile,
                     SetPost = true
                 };
 

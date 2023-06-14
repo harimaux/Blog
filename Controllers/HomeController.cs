@@ -44,47 +44,5 @@ namespace Blog.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-
-        //--------------------------------------------------------------------------- Photo upload - test
-
-        //[HttpPost]
-        //public async Task<IActionResult> Create(NewPostVM model, IFormFile photo)
-        //{
-
-        //    var currentUser = _userManager.GetUserAsync(User).Result;
-
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Create a new instance of the Post entity
-        //        var post = new Post
-        //        {
-        //            Title = model.Title,
-        //            Content = model.Content,
-        //            OwnerId = currentUser.Id,
-        //            CreatedAt = DateTime.UtcNow
-        //        };
-
-        //        // Process the photo if it was provided
-        //        if (photo != null)
-        //        {
-        //            using (var stream = new MemoryStream())
-        //            {
-        //                await photo.CopyToAsync(stream);
-        //                post.PostImage = stream.ToArray();
-        //            }
-        //        }
-
-        //        // Save the post to the database
-        //        _dbContext.Posts.Add(post);
-        //        await _dbContext.SaveChangesAsync();
-
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    // If the model state is not valid, return the view with validation errors
-        //    return View(model);
-        //}
     }
 }

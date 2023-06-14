@@ -1,12 +1,15 @@
-﻿namespace Blog.Models
+﻿using System.Buffers.Text;
+
+namespace Blog.Models
 {
     public class MainVM
     {
         public Post PostModel { get; set; }
         public PostImage PostImage { get; set; }
         public CreatePostFormData CreatePostFormData { get; set; }
-
         public bool SetPost { get; set; }
+
+        public byte[]? ImagePreview { get; set; }
 
         public MainVM()
         {
