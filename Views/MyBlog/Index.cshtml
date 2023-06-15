@@ -1,73 +1,66 @@
 ﻿@model Blog.Models.MainVM
 
-@*
-
-*@
-@{
-}
-
 <div class="myBlogSpaceMain">
 
     <h1>My Blog Space</h1>
 
     <div class="myBlogCreatePostFormBox">
         <form id="createPostForm" method="post" enctype="multipart/form-data" asp-action="CreatePost">
-            <input type="text" name="Title" placeholder="Title" />
+            <input type="text" name="Title" placeholder="Title" /><br />
             <input type="text" name="Content" placeholder="Content" />
-            <input type="file" name="PostImageFile"><br />
+            <select name="Category">
+                <option>Technology</option>
+                <option>Health and Fitness</option>
+                <option>Travel and Adventure</option>
+                <option>Fashion and Style</option>
+                <option>Food and Cooking</option>
+                <option>Personal Development</option>
+                <option>Business and Finance</option>
+                <option>Home and Interior Design</option>
+                <option>Sports and Fitness</option>
+                <option>Entertainment and Pop Culture</option>
+                <option>Science and Technology</option>
+                <option>Parenting and Family</option>
+                <option>Self-Care and Wellness</option>
+                <option>DIY and Crafts</option>
+                <option>Books and Literature</option>
+                <option>Photography and Visual Arts</option>
+                <option>Social Media and Digital Marketing</option>
+                <option>Education and Learning</option>
+                <option>Environment and Sustainability</option>
+                <option>Beauty and Skincare</option>
+            </select>
+            <label name="PostImageFile">
+                <input type="file" name="PostImageFile"><br />
+            </label>
             <button type="submit">Sent</button>
         </form>
     </div>
+
 </div>
 
 <div id="partialViewContainer">
 
 </div>
 
-<div id="previewContainer">
-</div>
+<h1>My Images</h1>
 
-@*@if (Model.SetPost == true)
+@foreach(var post in Model.DisplayUserContent)
 {
-    <partial name="_Post" />
-}*@
+    <h2>@post.UserPost!.Title</h2>
+    <p>@post.UserPost.Content</p>
+
+    <img src="data:image;base64,@System.Convert.ToBase64String(post.PostImage!.ImageFile!)" alt="@post.PostImage.Description Image" />
+
+}
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        // Handle form submission
-        $('#createPostForm').submit(function (event) {
-            event.preventDefault();
 
-            var form = $(this);
-            var url = form.attr('action');
-            var formData = new FormData(form[0]);
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-
-                    // Update the partial view with the received data
-                    $('#partialViewContainer').html(data);
-
-                },
-                error: function () {
-                    // Handle error if necessary
-                }
-            });
-        });
-    });
-
-</script>
-
-@*<script>
-    $(document).ready(function () {
-        // Handle form submission
         $('#createPostForm').submit(function (event) {
 
             event.preventDefault();
@@ -83,15 +76,15 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    // Update the partial view with the received data
-                    console.log(data);
+
                     $('#partialViewContainer').html(data);
+
                 },
-                error: function () {
-                    // Handle error if necessary
+                error: function (error) {
+                    alert(error);
                 }
             });
         });
     });
+
 </script>
-*@
