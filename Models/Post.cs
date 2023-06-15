@@ -22,5 +22,7 @@ namespace Blog.Models
         public virtual IdentityUser? Owner { get; set; }
 
         public string? Category { get; set; }
+        // Navigation property for the post images
+        public virtual ICollection<PostImage>? Images { get; set; }
     }
 }

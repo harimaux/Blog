@@ -21,5 +21,10 @@ namespace Blog.Models
 
         [NotMapped]
         public IFormFile? PostImageFile { get; set; }
+        // Foreign key property for the associated post
+        public int PostId { get; set; }
+
+        // Navigation property for the associated post
+        public virtual Post? Post { get; set; }
     }
 }
