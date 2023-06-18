@@ -6,5 +6,12 @@
 <h1>@Model.PostModel.Title</h1>
 <p>@Model.PostModel.Content</p>
 
-<img src="data:image;base64,@Convert.ToBase64String(@Model.ImagePreview!)" alt="Post Image">
+@*<img src="data:image;base64,@Convert.ToBase64String(@Model.ImagePreview!)" alt="Post Image">*@
 
+@foreach (var imageBytes in Model.ImagePreview!)
+{
+    var base64String = Convert.ToBase64String(imageBytes);
+    var imgSrc = $"data:image;base64,{base64String}";
+
+    <img src="@imgSrc" alt="Post Image" />
+}

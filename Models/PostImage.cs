@@ -20,7 +20,7 @@ namespace Blog.Models
         public byte[]? ImageFile { get; set; }
 
         [NotMapped]
-        public IFormFile? PostImageFile { get; set; }
+        public IFormFile? PostImageFiles { get; set; }
         // Foreign key property for the associated post
         public int PostId { get; set; }
 

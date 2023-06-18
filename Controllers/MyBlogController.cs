@@ -7,6 +7,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.Data.SqlClient.Server;
+using System.Drawing;
 
 namespace Blog.Controllers
 {
@@ -41,22 +43,21 @@ namespace Blog.Controllers
             var userPosts = _dbContext.Posts!.Where(p => p.OwnerId == userId).ToList();
             var userImages = _dbContext.PostImages!.Where(p => p.OwnerId == userId).ToList();
 
-            MainVM vm = new();
-
             var userPostViewModels = userPosts.Select(post =>
             {
-                PostImage? postImage = userImages.FirstOrDefault(image => image.PostId == post.Id);
+                var postImages = userImages.Where(image => image.PostId == post.Id).ToList();
                 return new DisplayUserPosts
                 {
                     UserPost = post,
-                    PostImage = postImage
+                    PostImages = postImages
                 };
             }).ToList();
 
-            vm.DisplayUserContent = userPostViewModels;
-
-            vm.SetPost = false;
-
+            var vm = new MainVM
+            {
+                DisplayUserContent = userPostViewModels,
+                SetPost = false
+            };
 
             return View(vm);
         }
@@ -64,6 +65,12 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromForm] CreatePostFormData formData)
         {
+            // Check for null values in inputs
+            if (string.IsNullOrEmpty(formData.Title) || string.IsNullOrEmpty(formData.Content) || string.IsNullOrEmpty(formData.Category) || formData.PostImageFile == null)
+            {
+                return BadRequest("Stop hacking!!!");
+            }
+
             if (ModelState.IsValid)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
@@ -80,28 +87,34 @@ namespace Blog.Controllers
                 _dbContext.Posts!.Add(newPost);
                 await _dbContext.SaveChangesAsync();
 
-                var newPostImage = new PostImage();
+                var imagePreviews = new List<byte[]>();
 
-                if (formData.PostImageFile != null && formData.PostImageFile.Length > 0)
+                foreach (var img in formData.PostImageFile!)
                 {
-                    using var memoryStream = new MemoryStream();
-                    await formData.PostImageFile.CopyToAsync(memoryStream);
-                    newPostImage.ImageFile = memoryStream.ToArray();
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await img.CopyToAsync(memoryStream);
+                        var newPostImage = new PostImage
+                        {
+                            ImageFile = memoryStream.ToArray(),
+                            Name = img.FileName,
+                            Description = formData.Category,
+                            OwnerId = currentUser.Id,
+                            CreatedAt = DateTime.Now,
+                            PostId = newPost.Id
+                        };
+                        _dbContext.PostImages!.Add(newPostImage);
+
+                        imagePreviews.Add(memoryStream.ToArray());
+                    }
                 }
 
-                newPostImage.Name = formData.PostImageFile!.FileName;
-                newPostImage.Description = formData.Category;
-                newPostImage.OwnerId = currentUser.Id;
-                newPostImage.CreatedAt = DateTime.Now;
-                newPostImage.PostId = newPost.Id;
-
-                _dbContext.PostImages!.Add(newPostImage);
                 await _dbContext.SaveChangesAsync();
 
                 var newVM = new MainVM
                 {
                     PostModel = newPost,
-                    ImagePreview = newPostImage.ImageFile,
+                    ImagePreview = imagePreviews,
                     SetPost = true
                 };
 
@@ -110,6 +123,7 @@ namespace Blog.Controllers
 
             return BadRequest();
         }
+
 
     }
 }

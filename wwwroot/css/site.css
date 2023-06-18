@@ -172,5 +172,35 @@ footer {
 /* ------------------- MY BLOG ------------------- */
 
 .myBlogSpaceMain {
-    margin: 4rem;
+
+}
+
+.myBlogCreatePostFormBox form {
+    display: flex;
+    flex-direction: column;
+}
+
+.myBlogCreatePostFormBox input {
+
+}
+
+
+.myBlogSpaceBox {
+    width: 80%;
+    margin: auto;
+}
+
+#myBlogUserPostUploaded img {
+    width: 600px;
+}
+
+.myBlogUserPostsSaved {
+}
+
+.myBlogUserPostContainer {
+    margin: auto;
+}
+
+.myBlogUserPostContainer img {
+    width: 600px;
 }

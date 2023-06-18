@@ -3,6 +3,6 @@
     public class DisplayUserPosts
     {
         public Post? UserPost { get; set; }
-        public PostImage? PostImage { get; set; }
+        public List<PostImage>? PostImages { get; set; }
     }
 }
