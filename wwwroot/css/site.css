@@ -198,7 +198,11 @@ footer {
 }
 
 .myBlogUserPostContainer {
-    margin: auto;
+    border: 1px solid var(--dark);
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    background: rgb(255, 239, 229)
 }
 
 .myBlogUserPostContainer img {

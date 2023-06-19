@@ -9,6 +9,8 @@ namespace Blog.Data
         public DbSet<Post>? Posts { get; set; }
         public DbSet<PostImage>? PostImages { get; set; }
 
+        public DbSet<UserExtraStuff>? UserExtraStuff { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

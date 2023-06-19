@@ -33,16 +33,29 @@ namespace Blog.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            int pageSize = 2;
+
             // Get logged user details
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
             // Get user posts
-            var userPosts = _dbContext.Posts!.Where(p => p.OwnerId == userId).ToList();
-            var userImages = _dbContext.PostImages!.Where(p => p.OwnerId == userId).ToList();
+            var userPosts = _dbContext.Posts!
+                .Where(p => p.OwnerId == userId)
+                .OrderByDescending(p => p.CreatedAt) // Sort by creation date in descending order
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
+            var userPostIds = userPosts.Select(up => up.Id).ToList();
+
+            var userImages = _dbContext.PostImages!
+                .Where(p => p.OwnerId == userId && userPostIds.Contains(p.PostId))
+                .ToList();
+
+            //Gathers user posts
             var userPostViewModels = userPosts.Select(post =>
             {
                 var postImages = userImages.Where(image => image.PostId == post.Id).ToList();
@@ -59,8 +72,17 @@ namespace Blog.Controllers
                 SetPost = false
             };
 
+            // Calculate pagination information
+            int totalPosts = _dbContext.Posts!.Count(p => p.OwnerId == userId);
+            int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
+
+            // Pass pagination information to the view
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = page;
+
             return View(vm);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromForm] CreatePostFormData formData)
@@ -121,7 +143,7 @@ namespace Blog.Controllers
                 return PartialView("_Post", newVM);
             }
 
-            return BadRequest();
+            return BadRequest("Something went wrong!!!");
         }
 
 
