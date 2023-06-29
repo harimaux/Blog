@@ -4,47 +4,59 @@
 
     <div class="myBlogSpaceBox">
 
-        <h1>My Blog Space</h1>
+        <div class="mx-4 mb-5">
 
-        <div class="myBlogCreatePostFormBox">
+            <h1>My Blog Space</h1>
 
-            <form id="createPostForm" method="post" enctype="multipart/form-data" asp-action="CreatePost">
+            <form id="createPostForm" method="post" enctype="multipart/form-data" asp-action="CreatePost" class="col-lg-6">
 
-                <input type="text" name="Title" placeholder="Title" />
+                <div class="form-group">
+                    <label for="Title">Title:</label>
+                    <input type="text" name="Title" class="form-control" />
+                </div>
 
-                <select multiple multiselect-search="true" multiselect-select-all="true"
-                        multiselect-max-items="8"
-                        multiselect-hide-x="false" id="sel1" name="Category">
-                    <option>Technology</option>
-                    <option>Health and Fitness</option>
-                    <option>Travel and Adventure</option>
-                    <option>Fashion and Style</option>
-                    <option>Food and Cooking</option>
-                    <option>Personal Development</option>
-                    <option>Business and Finance</option>
-                    <option>Home and Interior Design</option>
-                    <option>Sports and Fitness</option>
-                    <option>Entertainment and Pop Culture</option>
-                    <option>Science and Technology</option>
-                    <option>Parenting and Family</option>
-                    <option>Self-Care and Wellness</option>
-                    <option>DIY and Crafts</option>
-                    <option>Books and Literature</option>
-                    <option>Photography and Visual Arts</option>
-                    <option>Social Media and Digital Marketing</option>
-                    <option>Education and Learning</option>
-                    <option>Environment and Sustainability</option>
-                    <option>Beauty and Skincare</option>
-                </select>
+                <div class="form-group">
 
-                <input type="text" name="Content" placeholder="Content" />
+                    <label for="Category">Category:</label>
+                    
+                    <select name="Category" class="form-control">
+                        <option></option>
+                        <option>Technology</option>
+                        <option>Health and Fitness</option>
+                        <option>Travel and Adventure</option>
+                        <option>Fashion and Style</option>
+                        <option>Food and Cooking</option>
+                        <option>Personal Development</option>
+                        <option>Business and Finance</option>
+                        <option>Home and Interior Design</option>
+                        <option>Sports and Fitness</option>
+                        <option>Entertainment and Pop Culture</option>
+                        <option>Science and Technology</option>
+                        <option>Parenting and Family</option>
+                        <option>Self-Care and Wellness</option>
+                        <option>DIY and Crafts</option>
+                        <option>Books and Literature</option>
+                        <option>Photography and Visual Arts</option>
+                        <option>Social Media and Digital Marketing</option>
+                        <option>Education and Learning</option>
+                        <option>Environment and Sustainability</option>
+                        <option>Beauty and Skincare</option>
+                    </select>
+                </div>
 
-                <label name="PostImageFile">
-                    <input multiple type="file" name="PostImageFile"><br />
-                </label>
+                <div class="form-group">
+                    <label for="Content">Content:</label>
+                    <textarea name="Content" id="Content" class="form-control mb-2" rows="7"></textarea>
+                </div>
 
-                <button type="submit">Sent</button>
+                <div class="form-group mb-3">
+                    <label for="PostImageFile">Post Image:</label>
+                    <input multiple type="file" name="PostImageFile" id="PostImageFile" class="form-control-file" />
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Post</button>
             </form>
+
 
         </div>
 
@@ -52,27 +64,32 @@
 
         <div id="myBlogUserPostUploaded"></div>
 
-        <div class="myBlogUserPostsSaved">
-            @foreach (var displayPost in Model.DisplayUserContent)
-            {
-                var userPost = displayPost.UserPost;
-                var postImages = displayPost.PostImages;
+        <div class="container">
+            <div class="row">
+                @foreach (var displayPost in Model.DisplayUserContent)
+                {
+                    var userPost = displayPost.UserPost;
+                    var postImages = displayPost.PostImages;
 
-                <div class="myBlogUserPostContainer">
-                    <div class="myBlogUserPostContent">
-                        <h2>@userPost!.Title</h2>
-                        <p>@userPost.Content</p>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h2 class="card-title">@userPost!.Title</h2>
+                                <p class="card-text">@userPost.Content</p>
+                            </div>
+                            @foreach (var postImage in postImages!)
+                            {
+                                var base64String = Convert.ToBase64String(postImage.ImageFile!);
+                                var imgSrc = $"data:image;base64,{base64String}";
+
+                                <img src="@imgSrc" alt="@postImage.Description Image" class="card-img-top" />
+                            }
+                        </div>
                     </div>
-                    @foreach (var postImage in postImages!)
-                    {
-                        var base64String = Convert.ToBase64String(postImage.ImageFile!);
-                        var imgSrc = $"data:image;base64,{base64String}";
-
-                        <img src="@imgSrc" alt="@postImage.Description Image" />
-                    }
-                </div>
-            }
+                }
+            </div>
         </div>
+
 
         @if (ViewBag.TotalPages > 1)
         {

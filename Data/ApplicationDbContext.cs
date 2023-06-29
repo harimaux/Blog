@@ -8,7 +8,6 @@ namespace Blog.Data
     {
         public DbSet<Post>? Posts { get; set; }
         public DbSet<PostImage>? PostImages { get; set; }
-
         public DbSet<UserExtraStuff>? UserExtraStuff { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -25,7 +24,8 @@ namespace Blog.Data
                 .HasOne(p => p.Owner)
                 .WithMany()
                 .HasForeignKey(p => p.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                //Was - .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
