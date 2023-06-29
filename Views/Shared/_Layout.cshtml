@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Blog</title>
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Blog.styles.css" asp-append-version="true" />
 
@@ -51,27 +51,32 @@
         <partial name="_LoginPartial" />
     </nav>
 
+    <div style="position: relative; min-height: 100vh">
 
-    @RenderBody()
+        @RenderBody()
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-links">
-                <a href="#">Home</a>
-                <a href="#">Blog</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-links">
+                    <a href="#">Home</a>
+                    <a href="#">Blog</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="additional-info">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+                <div class="contact-info">
+                    <p>Email: info@example.com</p>
+                    <p>Phone: +1 123-456-7890</p>
+                </div>
             </div>
-            <div class="additional-info">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-            </div>
-            <div class="contact-info">
-                <p>Email: info@example.com</p>
-                <p>Phone: +1 123-456-7890</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
+    
+
+
 
 @*    <footer class="border-top footer text-muted">
         <div class="container">
@@ -81,9 +86,8 @@
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/MultiOptionSelect.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 

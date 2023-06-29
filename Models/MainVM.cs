@@ -7,6 +7,7 @@ namespace Blog.Models
         public Post PostModel { get; set; }
         public PostImage PostImage { get; set; }
         public CreatePostFormData CreatePostFormData { get; set; }
+        public UserExtraStuff UserExtraStuff { get; set; }
         public bool SetPost { get; set; }
         public List<byte[]>? ImagePreview { get; set; }
         public List<DisplayUserPosts> DisplayUserContent { get; set; }
@@ -20,6 +21,8 @@ namespace Blog.Models
             CreatePostFormData = new CreatePostFormData();
 
             DisplayUserContent = new List<DisplayUserPosts>();
+
+            UserExtraStuff = new UserExtraStuff();
 
         }
 

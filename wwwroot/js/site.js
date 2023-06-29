@@ -1,7 +1,4 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿
 //Process post upload
 $(document).ready(function () {
 
@@ -33,10 +30,5 @@ $(document).ready(function () {
         });
     });
 
-
-    //// Apply Select2 to the select element
-    //$(document).ready(function () {
-    //    $('select[name="Category"]').select2();
-    //});
 
 });
