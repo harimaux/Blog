@@ -106,7 +106,7 @@
         let editor = new FroalaEditor('#richTextEditor');
         var form = document.querySelector('.sendPostForm');
 
-        form.onsubmit = function (e) {
+        form.onsubmit = async function (e) {
             e.preventDefault();
 
             const postTitle = document.querySelector('input[name=Title]').value;
@@ -137,36 +137,43 @@
                 return match;
             });
 
-            Promise.all(promises).then(base64Array => {
-                const updatedContentWithBase64 = updatedContent.replace(/<img([^>]+)>/g, () => {
-                    const base64 = base64Array.shift();
-                    return base64 ? `<img src="${base64}">` : match;
-                });
-
-                var form = $(this);
-                var url = form.attr('action');
-
-                const formData = new FormData();
-                formData.append('RichContent', updatedContentWithBase64);
-                formData.append('Title', postTitle);
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        // Handle the success response
-
-                        alert("Works");
-                    },
-                    error: function (xhr, status, error) {
-                        var errorMessage = xhr.responseText || 'An error occurred.';
-                        alert('Error: ' + errorMessage);
-                        console.log(errorMessage);
+            const base64Array = await Promise.all(promises);
+            let base64Index = 0;
+            const updatedContentWithBase64 = updatedContent.replace(/<img([^>]+)>/g, (match, p1) => {
+                const srcMatch = p1.match(/src\s*=\s*(['"])(.*?)\1/);
+                if (srcMatch) {
+                    const src = srcMatch[2];
+                    if (!src.startsWith('http') && !src.startsWith('https')) {
+                        const base64 = base64Array[base64Index];
+                        base64Index++;
+                        return match.replace(src, base64);
                     }
-                });
+                }
+                return match;
+            });
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            const formData = new FormData();
+            formData.append('RichContent', updatedContentWithBase64);
+            formData.append('Title', postTitle);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    // Handle the success response
+                    alert("Works");
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.responseText || 'An error occurred.';
+                    alert('Error: ' + errorMessage);
+                    console.log(errorMessage);
+                }
             });
 
             return false;

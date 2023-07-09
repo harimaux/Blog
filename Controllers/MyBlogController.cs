@@ -77,13 +77,21 @@ namespace Blog.Controllers
                 CreatedAt = DateTime.Now
             };
 
-
             _dbContext.Posts!.Add(newPost);
             await _dbContext.SaveChangesAsync();
 
-            return View("Index");
+            var vm = new MainVM();
+            vm.Post = newPost;
+
+            return View("Index", vm);
         }
 
+
+        [HttpPost]
+        public void GetPostTest()
+        {
+
+        }
 
     }
 }
