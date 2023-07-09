@@ -4,6 +4,7 @@ using Blog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230702161350_AddQuillTable")]
+    partial class AddQuillTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,6 +87,36 @@ namespace Blog.Data.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("PostImages");
+                });
+
+            modelBuilder.Entity("Blog.Models.QuillPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PostContent")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("QuillPost");
                 });
 
             modelBuilder.Entity("Blog.Models.UserExtraStuff", b =>
@@ -359,6 +391,15 @@ namespace Blog.Data.Migrations
                     b.Navigation("Owner");
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Blog.Models.QuillPost", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Blog.Models.UserExtraStuff", b =>
