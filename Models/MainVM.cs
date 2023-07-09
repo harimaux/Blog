@@ -4,7 +4,7 @@ namespace Blog.Models
 {
     public class MainVM
     {
-        public Post PostModel { get; set; }
+        public Post Post { get; set; }
         public PostImage PostImage { get; set; }
         public UserExtraStuff UserExtraStuff { get; set; }
         public bool SetPost { get; set; }
@@ -15,7 +15,7 @@ namespace Blog.Models
 
         public MainVM()
         {
-            PostModel = new Post();
+            Post = new Post();
 
             PostImage = new PostImage();
 
