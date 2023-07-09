@@ -9,6 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Data.SqlClient.Server;
 using System.Drawing;
+using System.Text.Json;
+using Quill.Delta;
+using Newtonsoft.Json.Linq;
+using System.Xml;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using System;
+using Microsoft.CodeAnalysis;
 
 namespace Blog.Controllers
 {
@@ -33,119 +41,50 @@ namespace Blog.Controllers
         }
 
         [Authorize]
-        public IActionResult Index(int page = 1)
+        public IActionResult Index()
         {
-            int pageSize = 2;
 
             // Get logged user details
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
-            // Get user posts
-            var userPosts = _dbContext.Posts!
-                .Where(p => p.OwnerId == userId)
-                .OrderByDescending(p => p.CreatedAt) // Sort by creation date in descending order
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var vm = new MainVM();
 
-            var userPostIds = userPosts.Select(up => up.Id).ToList();
 
-            var userImages = _dbContext.PostImages!
-                .Where(p => p.OwnerId == userId && userPostIds.Contains(p.PostId))
-                .ToList();
-
-            //Gathers user posts
-            var userPostViewModels = userPosts.Select(post =>
+            if (user != null && _dbContext.Posts != null)
             {
-                var postImages = userImages.Where(image => image.PostId == post.Id).ToList();
-                return new DisplayUserPosts
-                {
-                    UserPost = post,
-                    PostImages = postImages
-                };
-            }).ToList();
+                var userPosts = _dbContext.Posts.Where(x => x.OwnerId == userId).ToList();
 
-            var vm = new MainVM
-            {
-                DisplayUserContent = userPostViewModels,
-                SetPost = false
-            };
-
-            // Calculate pagination information
-            int totalPosts = _dbContext.Posts!.Count(p => p.OwnerId == userId);
-            int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
-
-            // Pass pagination information to the view
-            ViewBag.TotalPages = totalPages;
-            ViewBag.CurrentPage = page;
+                vm.PostsList = userPosts;
+            }
 
             return View(vm);
+
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromForm] CreatePostFormData formData)
+        public async Task<IActionResult> GetPost(TextEditor formData)
         {
-            // Check for null values in inputs
-            if (string.IsNullOrEmpty(formData.Title) || string.IsNullOrEmpty(formData.Content) || string.IsNullOrEmpty(formData.Category) || formData.PostImageFile == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var newPost = new Post
             {
-                return BadRequest("Stop hacking!!!");
-            }
+                Title = formData.Title,
+                Category = "test cat",
+                Content = formData.RichContent,
+                OwnerId = userId,
+                CreatedAt = DateTime.Now
+            };
 
-            if (ModelState.IsValid)
-            {
-                var currentUser = await _userManager.GetUserAsync(User);
 
-                var newPost = new Post
-                {
-                    Title = formData.Title,
-                    Content = formData.Content,
-                    OwnerId = currentUser.Id,
-                    CreatedAt = DateTime.Now,
-                    Category = formData.Category
-                };
+            _dbContext.Posts!.Add(newPost);
+            await _dbContext.SaveChangesAsync();
 
-                _dbContext.Posts!.Add(newPost);
-                await _dbContext.SaveChangesAsync();
-
-                var imagePreviews = new List<byte[]>();
-
-                foreach (var img in formData.PostImageFile!)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await img.CopyToAsync(memoryStream);
-                        var newPostImage = new PostImage
-                        {
-                            ImageFile = memoryStream.ToArray(),
-                            Name = img.FileName,
-                            Description = formData.Category,
-                            OwnerId = currentUser.Id,
-                            CreatedAt = DateTime.Now,
-                            PostId = newPost.Id
-                        };
-                        _dbContext.PostImages!.Add(newPostImage);
-
-                        imagePreviews.Add(memoryStream.ToArray());
-                    }
-                }
-
-                await _dbContext.SaveChangesAsync();
-
-                var newVM = new MainVM
-                {
-                    PostModel = newPost,
-                    ImagePreview = imagePreviews,
-                    SetPost = true
-                };
-
-                return PartialView("_Post", newVM);
-            }
-
-            return BadRequest("Something went wrong!!!");
+            return View("Index");
         }
 
 
     }
 }
+

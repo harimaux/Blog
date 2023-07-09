@@ -1,124 +1,179 @@
-﻿@model Blog.Models.MainVM
+﻿@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+@using Quill.Delta;
+@model Blog.Models.MainVM
 
-<div class="myBlogSpaceMain">
+<div class="myBlogSpaceMain container bg-light">
 
-    <div class="myBlogSpaceBox">
+    @*<div class="createPostContent"></div>*@
+    @*asp-action="CreateQuiilPost"*@
 
-        <div class="mx-4 mb-5">
+@*    <div class="container">
+        <form class="QuillCreatePostForm" method="post" asp-action="CreateQuiilPost">
 
-            <h1>My Blog Space</h1>
-
-            <form id="createPostForm" method="post" enctype="multipart/form-data" asp-action="CreatePost" class="col-lg-6">
-
-                <div class="form-group">
-                    <label for="Title">Title:</label>
-                    <input type="text" name="Title" class="form-control" />
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="form-group mb-2">
+                        <label for="title">Title</label>
+                        <input class="form-control" name="title" type="text" value="test title">
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="Category">Category</label>
+                        <input class="form-control" name="Category" type="text" value="test category">
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
+            <div class="row form-group removePaddingEditorAndBtn">
+                <label for="postContent">Post</label>
+                <input name="postContent" type="hidden">
+                <div id="editor-container"></div>
+            </div>
 
-                    <label for="Category">Category:</label>
-                    
-                    <select name="Category" class="form-control">
-                        <option></option>
-                        <option>Technology</option>
-                        <option>Health and Fitness</option>
-                        <option>Travel and Adventure</option>
-                        <option>Fashion and Style</option>
-                        <option>Food and Cooking</option>
-                        <option>Personal Development</option>
-                        <option>Business and Finance</option>
-                        <option>Home and Interior Design</option>
-                        <option>Sports and Fitness</option>
-                        <option>Entertainment and Pop Culture</option>
-                        <option>Science and Technology</option>
-                        <option>Parenting and Family</option>
-                        <option>Self-Care and Wellness</option>
-                        <option>DIY and Crafts</option>
-                        <option>Books and Literature</option>
-                        <option>Photography and Visual Arts</option>
-                        <option>Social Media and Digital Marketing</option>
-                        <option>Education and Learning</option>
-                        <option>Environment and Sustainability</option>
-                        <option>Beauty and Skincare</option>
-                    </select>
-                </div>
+            <div class="row removePaddingEditorAndBtn">
+                <button class="btn btn-primary" type="submit">Submit Post</button>
+            </div>
 
-                <div class="form-group">
-                    <label for="Content">Content:</label>
-                    <textarea name="Content" id="Content" class="form-control mb-2" rows="7"></textarea>
-                </div>
+        </form>
+    </div>*@
 
-                <div class="form-group mb-3">
-                    <label for="PostImageFile">Post Image:</label>
-                    <input multiple type="file" name="PostImageFile" id="PostImageFile" class="form-control-file" />
-                </div>
+    @*------------------------------------------------------------*@
 
-                <button type="submit" class="btn btn-success w-100">Post</button>
-            </form>
+@*    @if (Model.PostsList != null)
+    {
+        @foreach (var post in Model.PostsList)
+        {
+            <h2>@post.Title</h2>
+            @if (!string.IsNullOrEmpty(post.Content))
+            {
+                <div>@Html.Raw(post.Content)</div>
+
+            }
+        }
+    }*@
 
 
+    <form method="POST" class="sendPostForm" asp-action="GetPost" enctype="multipart/form-data">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+
+        <!-- title input -->
+
+        <div class="form-outline mb-4">
+            <label class="form-label" asp-for="TextEditor.Title"></label>
+            <div>
+                <input asp-for="TextEditor.Title" name="Title" class="form-control" />
+                <span asp-validation-for="TextEditor.Title" class="text-danger"></span>
+            </div>
         </div>
 
-        <h1>My Posts</h1>
+        <!-- body input -->
 
-        <div id="myBlogUserPostUploaded"></div>
-
-        <div class="container">
-            <div class="row">
-                @foreach (var displayPost in Model.DisplayUserContent)
-                {
-                    var userPost = displayPost.UserPost;
-                    var postImages = displayPost.PostImages;
-
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h2 class="card-title">@userPost!.Title</h2>
-                                <p class="card-text">@userPost.Content</p>
-                            </div>
-                            @foreach (var postImage in postImages!)
-                            {
-                                var base64String = Convert.ToBase64String(postImage.ImageFile!);
-                                var imgSrc = $"data:image;base64,{base64String}";
-
-                                <img src="@imgSrc" alt="@postImage.Description Image" class="card-img-top" />
-                            }
-                        </div>
-                    </div>
-                }
+        <div class="form-outline mb-4">
+            <label class="form-label" asp-for="TextEditor.RichContent"></label>
+            <div>
+                <textarea id="richTextEditor" name="richContent" asp-for="TextEditor.RichContent" class="form-control"></textarea>
+                <span asp-validation-for="TextEditor.RichContent" class="text-danger"></span>
             </div>
         </div>
 
 
-        @if (ViewBag.TotalPages > 1)
+        <input type="Submit" class="btn btn-primary" value="Create" />
+    </form>
+
+    @if(Model.PostsList != null){
+
+        @foreach (var post in Model.PostsList)
         {
-            <div class="pagination">
-                @if (ViewBag.CurrentPage > 1)
-                {
-                    <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">Previous</a>
-                }
-
-                @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                {
-                    if (i == ViewBag.CurrentPage)
-                    {
-                        <span>@i</span>
-                    }
-                    else
-                    {
-                        <a href="@Url.Action("Index", new { page = i })">@i</a>
-                    }
-                }
-
-                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
-                {
-                    <a href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">Next</a>
-                }
+            <div class="post">
+                <h3>@post.Title</h3>
+                <div>
+                    @Html.Raw(post.Content)
+                </div>
             </div>
         }
+    }
 
 
 
-    </div>
 </div>
+
+@section Scripts{
+
+    <script>
+
+
+        let editor = new FroalaEditor('#richTextEditor');
+        var form = document.querySelector('.sendPostForm');
+
+        form.onsubmit = function (e) {
+            e.preventDefault();
+
+            const postTitle = document.querySelector('input[name=Title]').value;
+            const richTextContent = document.querySelector('textarea[name=richContent]').value;
+
+            const convertToBase64 = async (url) => {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            };
+
+            const promises = [];
+            const updatedContent = richTextContent.replace(/<img([^>]+)>/g, (match, p1) => {
+                const srcMatch = p1.match(/src\s*=\s*(['"])(.*?)\1/);
+                if (srcMatch) {
+                    const src = srcMatch[2];
+                    if (!src.startsWith('http') && !src.startsWith('https')) {
+                        const base64Promise = convertToBase64(src);
+                        promises.push(base64Promise);
+                        return match;
+                    }
+                }
+                return match;
+            });
+
+            Promise.all(promises).then(base64Array => {
+                const updatedContentWithBase64 = updatedContent.replace(/<img([^>]+)>/g, () => {
+                    const base64 = base64Array.shift();
+                    return base64 ? `<img src="${base64}">` : match;
+                });
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                const formData = new FormData();
+                formData.append('RichContent', updatedContentWithBase64);
+                formData.append('Title', postTitle);
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        // Handle the success response
+
+                        alert("Works");
+                    },
+                    error: function (xhr, status, error) {
+                        var errorMessage = xhr.responseText || 'An error occurred.';
+                        alert('Error: ' + errorMessage);
+                        console.log(errorMessage);
+                    }
+                });
+            });
+
+            return false;
+        };
+
+
+
+
+    </script>
+}
