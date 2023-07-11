@@ -1,17 +1,42 @@
-﻿
-@model Blog.Models.MainVM
+﻿@model Blog.Models.MainVM
 
 
-    
-<h1>@Model.Post.Title</h1>
-<p>@Model.Post.Content</p>
+<div class="fr-wrapper displayPostCustomBox">
 
-@*<img src="data:image;base64,@Convert.ToBase64String(@Model.ImagePreview!)" alt="Post Image">*@
+    <div class="fr-element fr-view">
 
-@foreach (var imageBytes in Model.ImagePreview!)
-{
-    var base64String = Convert.ToBase64String(imageBytes);
-    var imgSrc = $"data:image;base64,{base64String}";
+        <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
 
-    <img src="@imgSrc" alt="Post Image" />
-}
+            <h3>@Model.Post.Title</h3>
+
+            <div class="d-flex displayPostCustomHeader">
+
+                <div class="mx-3 displayPostCustomDate">Created: @Model.Post.CreatedAt</div>
+
+                <span data-value="@Model.Post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
+                    delete
+                </span>
+
+                <div class="displayPostCustomDeletePostConfirmBox">
+
+                    <div class="acceptDeletePost">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                    </div>
+
+                    <div class="cancelDeletePost">
+                        <span class="material-symbols-outlined">
+                            close
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            @Html.Raw(Model.Post.Content)
+        </div>
+
+    </div>
+</div>

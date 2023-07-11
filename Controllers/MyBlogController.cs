@@ -50,7 +50,7 @@ namespace Blog.Controllers
 
             var vm = new MainVM();
 
-
+            //Get user posts
             if (user != null && _dbContext.Posts != null)
             {
                 var userPosts = _dbContext.Posts.Where(x => x.OwnerId == userId).ToList();
@@ -63,10 +63,13 @@ namespace Blog.Controllers
         }
 
 
+
         [HttpPost]
-        public async Task<IActionResult> GetPost(TextEditor formData)
+        public async Task<IActionResult> SavePost(TextEditor formData)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewBag.generatePost = true;
 
             var newPost = new Post
             {
@@ -83,14 +86,32 @@ namespace Blog.Controllers
             var vm = new MainVM();
             vm.Post = newPost;
 
-            return View("Index", vm);
+            ViewBag.generatePost = true;
+
+            return PartialView("_Post", vm);
         }
 
 
         [HttpPost]
-        public void GetPostTest()
+        public async Task<IActionResult> DeletePost(int postId)
         {
+            if(_dbContext.Posts != null)
+            {
+                var post = await _dbContext.Posts.FindAsync(postId);
 
+                if (post == null)
+                {
+                    return NotFound(); // Or any appropriate error response
+                }
+
+                _dbContext.Posts.Remove(post);
+                await _dbContext.SaveChangesAsync();
+
+                // Redirect to an appropriate view or action
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
         }
 
     }

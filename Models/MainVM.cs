@@ -5,7 +5,6 @@ namespace Blog.Models
     public class MainVM
     {
         public Post Post { get; set; }
-        public PostImage PostImage { get; set; }
         public UserExtraStuff UserExtraStuff { get; set; }
         public bool SetPost { get; set; }
         public List<byte[]>? ImagePreview { get; set; }
@@ -16,8 +15,6 @@ namespace Blog.Models
         public MainVM()
         {
             Post = new Post();
-
-            PostImage = new PostImage();
 
             UserExtraStuff = new UserExtraStuff();
 
