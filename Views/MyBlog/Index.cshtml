@@ -3,57 +3,16 @@
 @using Quill.Delta;
 @model Blog.Models.MainVM
 
+@{
+    var generate = ViewBag.generatePost ?? false;
+
+}
+
+
 <div class="myBlogSpaceMain container bg-light">
 
-    @*<div class="createPostContent"></div>*@
-    @*asp-action="CreateQuiilPost"*@
 
-@*    <div class="container">
-        <form class="QuillCreatePostForm" method="post" asp-action="CreateQuiilPost">
-
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="form-group mb-2">
-                        <label for="title">Title</label>
-                        <input class="form-control" name="title" type="text" value="test title">
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="Category">Category</label>
-                        <input class="form-control" name="Category" type="text" value="test category">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row form-group removePaddingEditorAndBtn">
-                <label for="postContent">Post</label>
-                <input name="postContent" type="hidden">
-                <div id="editor-container"></div>
-            </div>
-
-            <div class="row removePaddingEditorAndBtn">
-                <button class="btn btn-primary" type="submit">Submit Post</button>
-            </div>
-
-        </form>
-    </div>*@
-
-    @*------------------------------------------------------------*@
-
-@*    @if (Model.PostsList != null)
-    {
-        @foreach (var post in Model.PostsList)
-        {
-            <h2>@post.Title</h2>
-            @if (!string.IsNullOrEmpty(post.Content))
-            {
-                <div>@Html.Raw(post.Content)</div>
-
-            }
-        }
-    }*@
-
-
-    <form method="POST" class="sendPostForm" asp-action="GetPost" enctype="multipart/form-data">
+    <form method="POST" class="sendPostForm mb-5" asp-action="SavePost" enctype="multipart/form-data">
 
         <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
 
@@ -78,32 +37,72 @@
         </div>
 
 
-        <input type="Submit" class="btn btn-primary" value="Create" />
+        <input type="Submit" class="btn btn-success bg-gradient" value="Create Post" />
     </form>
 
-    @if(Model.PostsList != null){
+    <div id="partialViewContainer">
 
-        @foreach (var post in Model.PostsList)
-        {
-            <div class="post">
-                <h3>@post.Title</h3>
-                <div>
-                    @Html.Raw(post.Content)
-                </div>
-            </div>
-        }
-    }
+            @if (Model.PostsList != null)
+            {
+                @foreach (var post in Model.PostsList)
+                {
+                    <div class="fr-wrapper displayPostCustomBox">
 
+                        <div class="fr-element fr-view">
 
+                            <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
 
+                                <h3>@post.Title</h3>
+
+                                <div class="d-flex displayPostCustomHeader">
+
+                                    <div class="mx-3 displayPostCustomDate">Created: @post.CreatedAt</div>
+                                        
+                                    <span data-value="@post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
+                                        delete
+                                    </span>
+
+                                    <div class="displayPostCustomDeletePostConfirmBox">
+
+                                        <div class="acceptDeletePost">
+                                            <span class="material-symbols-outlined">
+                                                done
+                                            </span>
+                                        </div>
+
+                                        <div class="cancelDeletePost">
+                                            <span class="material-symbols-outlined">
+                                                close
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                @Html.Raw(post.Content)
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+    </div>
+
+    
 </div>
 
 @section Scripts{
 
     <script>
 
+        // Get all the delete buttons
+        let deleteButtons = document.querySelectorAll('.displayPostCustomDeletePost');
 
+        //Rich text editor
         let editor = new FroalaEditor('#richTextEditor');
+
+        //Form
         var form = document.querySelector('.sendPostForm');
 
         form.onsubmit = async function (e) {
@@ -112,6 +111,7 @@
             const postTitle = document.querySelector('input[name=Title]').value;
             const richTextContent = document.querySelector('textarea[name=richContent]').value;
 
+        //This code defines an asynchronous function convertToBase64 that takes a URL as a parameter.It uses the Fetch API to fetch the resource at the given URL, retrieves the response as a blob, and then converts the blob to a base64 - encoded string using a FileReader.The function returns a promise that resolves with the base64 string.
             const convertToBase64 = async (url) => {
                 const response = await fetch(url);
                 const blob = await response.blob();
@@ -123,6 +123,8 @@
                 });
             };
 
+
+            //These lines define an empty array promises and use the replace() method with a regular expression to iterate over the img tags in the richTextContent string. For each img tag, it extracts the value of the src attribute using a regex match. If the src value doesn't start with 'http' or 'https', indicating it's a local file, it calls the convertToBase64 function with the src value and adds the resulting promise to the promises array. The replace() method returns the updated content with the original img tags unchanged.
             const promises = [];
             const updatedContent = richTextContent.replace(/<img([^>]+)>/g, (match, p1) => {
                 const srcMatch = p1.match(/src\s*=\s*(['"])(.*?)\1/);
@@ -137,6 +139,7 @@
                 return match;
             });
 
+            //These lines use Promise.all() to await all the promises in the promises array. This ensures that all the base64 conversions are completed before further processing. The resulting array of base64 strings is stored in the base64Array variable. The code then uses the replace() method again to iterate over the img tags in the updatedContent string. It checks if the src value indicates a local file, and if so, replaces it with the corresponding base64 string from the base64Array. This updates the src attribute of the img tags with the base64-encoded images.
             const base64Array = await Promise.all(promises);
             let base64Index = 0;
             const updatedContentWithBase64 = updatedContent.replace(/<img([^>]+)>/g, (match, p1) => {
@@ -166,8 +169,13 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    // Handle the success response
-                    alert("Works");
+
+                    // Create a jQuery element from the data
+                    const newPost = $(data);
+
+                    // Insert the new post at the top of the list
+                    $('#partialViewContainer').prepend(newPost);
+
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = xhr.responseText || 'An error occurred.';
@@ -179,6 +187,65 @@
             return false;
         };
 
+
+
+        //DELETE POST
+
+        const partialViewContainer = document.getElementById('partialViewContainer');
+
+        partialViewContainer.addEventListener('click', function (e) {
+
+            if (e.target.matches('.displayPostCustomDeletePost')) {
+
+                const deleteButton = e.target;
+                const postId = parseInt(deleteButton.getAttribute('data-value'));
+                
+                const confirmBox = deleteButton.nextElementSibling;
+
+                const deletePost = confirmBox.querySelector('.acceptDeletePost');
+                const cancelDelete = confirmBox.querySelector('.cancelDeletePost');
+
+                //Get main box
+                const postContainer = deleteButton.closest('.displayPostCustomBox');
+                const dateDisplay = postContainer.querySelector('.displayPostCustomDate');
+
+                $(deleteButton).effect("bounce", { times: 2 }, "fast", function () {
+
+                    deleteButton.classList.add('hideDeleteButton');
+                    confirmBox.style.display = "flex";
+
+                });
+
+                //Remove styles
+                deleteButton.classList.remove('showDeleteButton');
+
+                //Cancel delete post
+                cancelDelete.addEventListener('click', () => {
+
+                    deleteButton.classList.remove('hideDeleteButton');
+                    deleteButton.classList.add('showDeleteButton');
+                    confirmBox.style.display = "none";
+                });
+
+                //Delete post
+                deletePost.addEventListener('click', () => {
+
+                    $(postContainer).effect("shake", { times: 3 }, "mid", function () {
+
+                        postContainer.classList.add('removePostBox');
+                        //console.log(postContainer.)
+                        
+                        $.post("@Url.Action("DeletePost", "MyBlog")", { postId: postId }, function (data) {
+
+                            postContainer.remove();
+
+                        });
+
+                    });
+                });
+
+            }
+        });
 
 
 

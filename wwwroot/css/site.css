@@ -15,6 +15,7 @@
 
 body {
     font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
 }
 
 /* ------------------- NAVIGATION ------------------- */
@@ -95,6 +96,7 @@ nav li {
 }
 
 /* ------------------- FOOTER ------------------- */
+
 footer {
     background-color: #f2f2f2;
     padding: 20px;
@@ -177,40 +179,127 @@ footer {
     padding-bottom: 300px;
 }
 
-/*.myBlogCreatePostFormBox form {
-    display: flex;
-    flex-direction: column;
-}
-
-.myBlogCreatePostFormBox input {
-
-}*/
-
-.myBlogSpaceBox {
-
-}
-
-#myBlogUserPostUploaded img {
-    width: 600px;
-}
-
-.myBlogUserPostsSaved {
-}
-
 .myBlogUserPostContainer {
     border: 1px solid var(--dark);
     margin-bottom: 2rem;
     padding: 1rem;
     border-radius: 5px;
-    background: rgb(255, 239, 229)
+    background: rgb(255, 239, 229);
 }
 
-.myBlogUserPostContainer img {
-    width: 600px;
+.displayPostCustomBox {
+    background-color: rgb(229, 229, 229);
+    margin: 1rem 0 1rem 0;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+.partialViewContainer {
+    transition: .5s;
+}
+
+.displayPostCustomHeader {
+    min-height: 42px;
+}
+
+.displayPostCustomDeletePost,
+.displayPostCustomDeletePostConfirmBox {
+    cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.displayPostCustomDeletePostConfirmBox {
+    display: none;
+    justify-content: space-evenly;
+    background-color: whitesmoke;
+    color: var(--dark);
+    height: 26px;
+    border-radius: 25px;
+    width: 80px;
+    animation: slideIn .3s forwards;
+    transform: translate(150px);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translate(0px);
+    }
+}
+
+.hideDeleteButton {
+    animation: hide .2s forwards;
+}
+
+@keyframes hide {
+
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100px);
+        pointer-events: none;
+        width: 0;
+    }
+}
+
+.showDeleteButton {
+    opacity: 0;
+    animation: show .2s forwards;
+}
+
+@keyframes show {
+
+    from {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.removePostBox {
+    animation: removePost .2s forwards;
+}
+
+@keyframes removePost {
+
+    from {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(1000px);
+    }
+}
+
+.removePostBoxadjustHeight {
+    animation: adjustHeight 1s forwards;
+}
+
+@keyframes adjustHeight {
+
+    20% {
+        height: auto;
+    }
+
+    100% {
+        height: 0;
+    }
 }
 
 /* ------------------- LOGIN/REGISTER ------------------- */
-
 .accountBackground {
     min-height: 80vh;
     background-image: url("/Images/Home/blog235266.jpg");
@@ -224,3 +313,6 @@ footer {
 
 /* ------------------- RICH TEXT LIVBRARY ------------------- */
 
+#fr-logo {
+    display: none;
+}
