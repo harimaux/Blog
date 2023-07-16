@@ -194,10 +194,6 @@ footer {
     padding: .5rem;
 }
 
-.partialViewContainer {
-    transition: .5s;
-}
-
 .displayPostCustomHeader {
     min-height: 42px;
 }
@@ -315,4 +311,20 @@ footer {
 
 #fr-logo {
     display: none;
+}
+
+/* ------------------- SELECT2 ------------------- */
+
+.select2-selection {
+    padding: .4rem;
+    border: 1px solid #ced4da !important;
+}
+
+.select2-selection textarea {
+    margin-top: 0px !important;
+    transform: translateY(-5px);
+}
+
+.select2-selection li {
+    margin-top: 0px !important;
 }

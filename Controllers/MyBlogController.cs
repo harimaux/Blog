@@ -40,6 +40,7 @@ namespace Blog.Controllers
             return _dbContext;
         }
 
+
         [Authorize]
         public IActionResult Index()
         {
@@ -53,10 +54,14 @@ namespace Blog.Controllers
             //Get user posts
             if (user != null && _dbContext.Posts != null)
             {
-                var userPosts = _dbContext.Posts.Where(x => x.OwnerId == userId).ToList();
+                var userPosts = _dbContext.Posts
+                    .Where(x => x.OwnerId == userId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToList();
 
                 vm.PostsList = userPosts;
             }
+
 
             return View(vm);
 
@@ -67,14 +72,20 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePost(TextEditor formData)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var vm = new MainVM();
 
-            ViewBag.generatePost = true;
+            if (!ModelState.IsValid)
+            {
+                // Model is not valid, return the form with validation errors
+                return PartialView("PostError", formData);
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var newPost = new Post
             {
                 Title = formData.Title,
-                Category = "test cat",
+                Category = string.Join(",", formData.Category ?? Array.Empty<string>()),
                 Content = formData.RichContent,
                 OwnerId = userId,
                 CreatedAt = DateTime.Now
@@ -83,13 +94,11 @@ namespace Blog.Controllers
             _dbContext.Posts!.Add(newPost);
             await _dbContext.SaveChangesAsync();
 
-            var vm = new MainVM();
             vm.Post = newPost;
-
-            ViewBag.generatePost = true;
 
             return PartialView("_Post", vm);
         }
+
 
 
         [HttpPost]
