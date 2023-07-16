@@ -1,12 +1,6 @@
 ﻿@using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
-@using Quill.Delta;
 @model Blog.Models.MainVM
-
-@{
-    var generate = ViewBag.generatePost ?? false;
-
-}
 
 
 <div class="myBlogSpaceMain container bg-light">
@@ -18,18 +12,50 @@
 
         <!-- title input -->
 
-        <div class="form-outline mb-4">
+        <div class="form-outline mb-2">
             <label class="form-label" asp-for="TextEditor.Title"></label>
             <div>
-                <input asp-for="TextEditor.Title" name="Title" class="form-control" />
+                <input asp-for="TextEditor.Title" name="Title" class="form-control" required/>
                 <span asp-validation-for="TextEditor.Title" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- category select -->
+
+        <div class="form-outline mb-4">
+            <label class="form-label" asp-for="TextEditor.Category"></label>
+            <div>
+                <select class="form-select SELECTmulti" name="Category" multiple required>
+                    <option value="adventure">Adventure</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="culture">Culture</option>
+                    <option value="digital-marketing">Digital Marketing</option>
+                    <option value="eco-friendly-lifestyle">Eco-Friendly Lifestyle</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="fitness">Fitness</option>
+                    <option value="food">Food</option>
+                    <option value="health">Health</option>
+                    <option value="innovation">Innovation</option>
+                    <option value="inspiration">Inspiration</option>
+                    <option value="mindfulness">Mindfulness</option>
+                    <option value="nature">Nature</option>
+                    <option value="outdoor-adventures">Outdoor Adventures</option>
+                    <option value="photography">Photography</option>
+                    <option value="self-care-tips">Self-Care Tips</option>
+                    <option value="sustainability">Sustainability</option>
+                    <option value="technology">Technology</option>
+                    <option value="travel-hacks">Travel Hacks</option>
+                    <option value="wanderlust">Wanderlust</option>
+                </select>
+
+                <span asp-validation-for="TextEditor.Category" class="text-danger"></span>
             </div>
         </div>
 
         <!-- body input -->
 
         <div class="form-outline mb-4">
-            <label class="form-label" asp-for="TextEditor.RichContent"></label>
+            <label class="form-label" asp-for="TextEditor.RichContent">Your Post</label>
             <div>
                 <textarea id="richTextEditor" name="richContent" asp-for="TextEditor.RichContent" class="form-control"></textarea>
                 <span asp-validation-for="TextEditor.RichContent" class="text-danger"></span>
@@ -37,7 +63,10 @@
         </div>
 
 
-        <input type="Submit" class="btn btn-success bg-gradient" value="Create Post" />
+        <div>
+            <input type="Submit" class="btn btn-success bg-gradient" value="Create Post" />
+        </div>
+
     </form>
 
     <div id="partialViewContainer">
@@ -96,20 +125,47 @@
 
     <script>
 
+        //FROALA rich text editor
+        let editor = new FroalaEditor('#richTextEditor', {
+            heightMin: 300,
+            
+        });
+
+        //Way of adding values in code
+        //editor.opts.height = 200;
+        //editor.size.refresh();
+
+
+        //SELECT2
+        $(document).ready(function () {
+            $('.SELECTmulti').select2({
+                //placeholder: "Select category..",
+                initSelection: function (element, callback) {
+                }
+            });
+        });
+        
+
         // Get all the delete buttons
         let deleteButtons = document.querySelectorAll('.displayPostCustomDeletePost');
-
-        //Rich text editor
-        let editor = new FroalaEditor('#richTextEditor');
 
         //Form
         var form = document.querySelector('.sendPostForm');
 
         form.onsubmit = async function (e) {
+
             e.preventDefault();
 
+            $(".postEmptyErrorBox").remove();
+
             const postTitle = document.querySelector('input[name=Title]').value;
+            const category = $('.SELECTmulti').select2("val");
             const richTextContent = document.querySelector('textarea[name=richContent]').value;
+
+            if(richTextContent == ""){
+                console.log("Do error here")
+                return false;
+            }
 
         //This code defines an asynchronous function convertToBase64 that takes a URL as a parameter.It uses the Fetch API to fetch the resource at the given URL, retrieves the response as a blob, and then converts the blob to a base64 - encoded string using a FileReader.The function returns a promise that resolves with the base64 string.
             const convertToBase64 = async (url) => {
@@ -161,6 +217,7 @@
             const formData = new FormData();
             formData.append('RichContent', updatedContentWithBase64);
             formData.append('Title', postTitle);
+            formData.append('Category', category)
 
             $.ajax({
                 url: url,
@@ -170,11 +227,29 @@
                 contentType: false,
                 success: function (data) {
 
+                    //Clears inputs
+                    let clearPostTitle = document.querySelector('input[name=Title]');
+                    clearPostTitle.value = "";
+
+                    $(".SELECTmulti").val('').trigger('change');
+
+                    let clearPostContent = document.querySelector('.fr-element');
+                    clearPostContent.innerHTML = "";
+
                     // Create a jQuery element from the data
                     const newPost = $(data);
 
                     // Insert the new post at the top of the list
-                    $('#partialViewContainer').prepend(newPost);
+                    try{
+                        $('#partialViewContainer').prepend(newPost);
+                    }
+                    finally
+                    {
+                        console.log($('.displayPostCustomBox'));
+                        //Scrolls to post
+
+
+                    }
 
                 },
                 error: function (xhr, status, error) {
@@ -230,7 +305,7 @@
                 //Delete post
                 deletePost.addEventListener('click', () => {
 
-                    $(postContainer).effect("shake", { times: 3 }, "mid", function () {
+                    $(postContainer).effect("shake", { times: 3 }, "slow", function () {
 
                         postContainer.classList.add('removePostBox');
                         //console.log(postContainer.)
