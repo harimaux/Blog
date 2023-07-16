@@ -3,6 +3,10 @@
 @model Blog.Models.MainVM
 
 
+@{
+    ViewData["Title"] = "User Posts";
+}
+
 <div class="myBlogSpaceMain container bg-light">
 
 
@@ -69,54 +73,103 @@
 
     </form>
 
-    <div id="partialViewContainer">
+<div id="partialViewContainer">
 
-            @if (Model.PostsList != null)
-            {
-                @foreach (var post in Model.PostsList)
-                {
-                    <div class="fr-wrapper displayPostCustomBox">
+    @if (Model.PostsList != null && Model.PostsList.Any())
+    {
+        @foreach (var post in Model.PostsList)
+        {
+            <div class="fr-wrapper displayPostCustomBox">
 
-                        <div class="fr-element fr-view">
+                <div class="fr-element fr-view">
 
-                            <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
+                    <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
 
-                                <h3>@post.Title</h3>
+                        <h3>@post.Title</h3>
 
-                                <div class="d-flex displayPostCustomHeader">
+                        <div class="d-flex displayPostCustomHeader">
 
-                                    <div class="mx-3 displayPostCustomDate">Created: @post.CreatedAt</div>
-                                        
-                                    <span data-value="@post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
-                                        delete
+                            <div class="mx-3 displayPostCustomDate">Created: @post.CreatedAt</div>
+
+                            <span data-value="@post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
+                                delete
+                            </span>
+
+                            <div class="displayPostCustomDeletePostConfirmBox">
+
+                                <div class="acceptDeletePost">
+                                    <span class="material-symbols-outlined">
+                                        done
                                     </span>
+                                </div>
 
-                                    <div class="displayPostCustomDeletePostConfirmBox">
-
-                                        <div class="acceptDeletePost">
-                                            <span class="material-symbols-outlined">
-                                                done
-                                            </span>
-                                        </div>
-
-                                        <div class="cancelDeletePost">
-                                            <span class="material-symbols-outlined">
-                                                close
-                                            </span>
-                                        </div>
-                                    </div>
+                                <div class="cancelDeletePost">
+                                    <span class="material-symbols-outlined">
+                                        close
+                                    </span>
                                 </div>
                             </div>
-
-                            <div class="mt-5">
-                                @Html.Raw(post.Content)
-                            </div>
-
                         </div>
                     </div>
-                }
-            }
-    </div>
+
+                    <div class="mt-5">
+                        @Html.Raw(post.Content)
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                        </li>
+                    }
+
+                    @if (Model.CurrentPage < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <p>No posts found.</p>
+    }
+
+</div>
+
+
+
+
+
+
+
+
+
+
 
     
 </div>

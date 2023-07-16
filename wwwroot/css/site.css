@@ -295,6 +295,17 @@ footer {
     }
 }
 
+/* Override default Bootstrap link color */
+.pagination a.page-link {
+    color: grey;
+}
+
+/* Override the active link color */
+.pagination .page-item.active .page-link {
+    background-color: gray;
+    border-color: grey;
+}
+
 /* ------------------- LOGIN/REGISTER ------------------- */
 .accountBackground {
     min-height: 80vh;

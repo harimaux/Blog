@@ -10,6 +10,8 @@ namespace Blog.Models
         public List<byte[]>? ImagePreview { get; set; }
         public List<Post>? PostsList { get; set; }
         public TextEditor TextEditor { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
 
 
         public MainVM()

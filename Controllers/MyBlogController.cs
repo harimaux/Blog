@@ -42,26 +42,36 @@ namespace Blog.Controllers
 
 
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-
             // Get logged user details
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
             var vm = new MainVM();
 
-            //Get user posts
+            // Get user posts
             if (user != null && _dbContext.Posts != null)
             {
+                int pageSize = 3; // Number of posts to display per page
                 var userPosts = _dbContext.Posts
                     .Where(x => x.OwnerId == userId)
                     .OrderByDescending(x => x.CreatedAt)
                     .ToList();
 
-                vm.PostsList = userPosts;
-            }
+                int totalCount = userPosts.Count;
+                int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
+                // Ensure the requested page is within the valid range
+                page = Math.Max(1, Math.Min(page, totalPages));
+
+                // Get the posts for the requested page
+                var postsForPage = userPosts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                vm.PostsList = postsForPage;
+                vm.CurrentPage = page;
+                vm.TotalPages = totalPages;
+            }
 
             return View(vm);
 
