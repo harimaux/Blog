@@ -3,11 +3,7 @@
 @model Blog.Models.MainVM
 
 
-@{
-    ViewData["Title"] = "User Posts";
-}
-
-<div class="myBlogSpaceMain container bg-light">
+<div class="myBlogSpaceMain container bg-light mt-3 mb-3 rounded-3">
 
 
     <form method="POST" class="sendPostForm mb-5" asp-action="SavePost" enctype="multipart/form-data">
@@ -17,9 +13,9 @@
         <!-- title input -->
 
         <div class="form-outline mb-2">
-            <label class="form-label" asp-for="TextEditor.Title"></label>
+            <label class="form-label labelTitle" asp-for="TextEditor.Title"></label>
             <div>
-                <input asp-for="TextEditor.Title" name="Title" class="form-control" required/>
+                <input asp-for="TextEditor.Title" name="Title" class="form-control inputTitle"/>
                 <span asp-validation-for="TextEditor.Title" class="text-danger"></span>
             </div>
         </div>
@@ -27,9 +23,9 @@
         <!-- category select -->
 
         <div class="form-outline mb-4">
-            <label class="form-label" asp-for="TextEditor.Category"></label>
-            <div>
-                <select class="form-select SELECTmulti" name="Category" multiple required>
+            <label class="form-label labelCategory" asp-for="TextEditor.Category"></label>
+            <div class="selectCategory">
+                <select class="form-select SELECTmulti" name="Category" multiple>
                     <option value="adventure">Adventure</option>
                     <option value="beauty">Beauty</option>
                     <option value="culture">Culture</option>
@@ -59,8 +55,8 @@
         <!-- body input -->
 
         <div class="form-outline mb-4">
-            <label class="form-label" asp-for="TextEditor.RichContent">Your Post</label>
-            <div>
+            <label class="form-label labelEditor" asp-for="TextEditor.RichContent">Your Post</label>
+            <div class="textareaEditor">
                 <textarea id="richTextEditor" name="richContent" asp-for="TextEditor.RichContent" class="form-control"></textarea>
                 <span asp-validation-for="TextEditor.RichContent" class="text-danger"></span>
             </div>
@@ -73,103 +69,93 @@
 
     </form>
 
-<div id="partialViewContainer">
+    <div id="partialViewContainer">
 
-    @if (Model.PostsList != null && Model.PostsList.Any())
-    {
-        @foreach (var post in Model.PostsList)
+        @if (Model.PostsList != null && Model.PostsList.Any())
         {
-            <div class="fr-wrapper displayPostCustomBox">
+            @foreach (var post in Model.PostsList)
+            {
+                <div class="fr-wrapper displayPostCustomBox">
 
-                <div class="fr-element fr-view">
+                    <div class="fr-element fr-view">
 
-                    <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
+                        <div class="d-flex justify-content-between rounded-1 bg-dark bg-gradient text-light p-2">
 
-                        <h3>@post.Title</h3>
+                            <h3>@post.Title</h3>
 
-                        <div class="d-flex displayPostCustomHeader">
+                            <div class="d-flex displayPostCustomHeader">
 
-                            <div class="mx-3 displayPostCustomDate">Created: @post.CreatedAt</div>
+                                <div class="mx-3 displayPostCustomDate">Created: @post.CreatedAt</div>
 
-                            <span data-value="@post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
-                                delete
-                            </span>
+                                <span data-value="@post.Id" class="material-symbols-outlined displayPostCustomDeletePost">
+                                    delete
+                                </span>
 
-                            <div class="displayPostCustomDeletePostConfirmBox">
+                                <div class="displayPostCustomDeletePostConfirmBox">
 
-                                <div class="acceptDeletePost">
-                                    <span class="material-symbols-outlined">
-                                        done
-                                    </span>
-                                </div>
+                                    <div class="acceptDeletePost">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                    </div>
 
-                                <div class="cancelDeletePost">
-                                    <span class="material-symbols-outlined">
-                                        close
-                                    </span>
+                                    <div class="cancelDeletePost">
+                                        <span class="material-symbols-outlined">
+                                            close
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mt-5">
-                        @Html.Raw(post.Content)
-                    </div>
+                        <div class="mt-5">
+                            @Html.Raw(post.Content)
+                        </div>
 
+                    </div>
                 </div>
-            </div>
-        }
+            }
 
-        @if (Model.TotalPages > 1)
+            @if (Model.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
         {
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @if (Model.CurrentPage > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                    }
-
-                    @for (int i = 1; i <= Model.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                        </li>
-                    }
-
-                    @if (Model.CurrentPage < Model.TotalPages)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </nav>
+            <p>You don't have any posts yet.</p>
         }
-    }
-    else
-    {
-        <p>No posts found.</p>
-    }
 
-</div>
-
-
-
-
-
-
-
-
-
-
+    </div>
 
     
 </div>
@@ -197,7 +183,31 @@
                 }
             });
         });
+
+        //Error on blank fields
+        let labelTitle = document.querySelector('.labelTitle');
+        let inputTitle = document.querySelector('.inputTitle');
         
+        inputTitle.addEventListener('mouseup', () => {
+            labelTitle.innerHTML = "Title";
+            labelTitle.style.color = "unset";
+        });
+
+        let labelCategory = document.querySelector('.labelCategory');
+        let selectCategory = document.querySelector('.selectCategory');
+
+        selectCategory.addEventListener('mouseup', () => {
+            labelCategory.innerHTML = "Category";
+            labelCategory.style.color = "unset";
+        });
+
+        let labelEditor = document.querySelector('.labelEditor');
+        let textareaEditor = document.querySelector('.textareaEditor');
+
+        textareaEditor.addEventListener('mouseup', () => {
+            labelEditor.innerHTML = "Your Post";
+            labelEditor.style.color = "unset";
+        });
 
         // Get all the delete buttons
         let deleteButtons = document.querySelectorAll('.displayPostCustomDeletePost');
@@ -215,8 +225,29 @@
             const category = $('.SELECTmulti').select2("val");
             const richTextContent = document.querySelector('textarea[name=richContent]').value;
 
+            //Errors on empty input
+            if(postTitle == ""){
+
+                labelTitle.innerHTML = "Please enter a title for your post.";
+                labelTitle.style.color = "red";
+                labelTitle.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+
+                return false;
+            }
+
+            if(category == ""){
+                labelCategory.innerHTML = "Please choose a category for your post.";
+                labelCategory.style.color = "red";
+                labelCategory.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+
+                return false;
+            }
+
             if(richTextContent == ""){
-                console.log("Do error here")
+                labelEditor.innerHTML = "Please enter a content of your post.";
+                labelEditor.style.color = "red";
+                labelEditor.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+
                 return false;
             }
 
@@ -293,15 +324,16 @@
                     const newPost = $(data);
 
                     // Insert the new post at the top of the list
-                    try{
+                    try {
                         $('#partialViewContainer').prepend(newPost);
-                    }
-                    finally
-                    {
-                        console.log($('.displayPostCustomBox'));
-                        //Scrolls to post
 
-
+                        // Scroll to post after a short delay to allow time for rendering
+                        setTimeout(function () {
+                            let firstPostInList = document.querySelector('.displayPostCustomBox');
+                            firstPostInList.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                        }, 100);
+                    } catch (error) {
+                         alert(error)
                     }
 
                 },

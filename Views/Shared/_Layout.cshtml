@@ -29,87 +29,71 @@
 
 </head>
 <body>
-@*    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blog</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blog Space</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
                     <partial name="_LoginPartial" />
-                </div>
+                </ul>
             </div>
-        </nav>
-    </header>*@
-
-    <nav>
-        <ul>
-            <li class="homeLogoLi">
-                <a class="homeLogo" asp-area="" asp-controller="Home" asp-action="Index">Blog Space</a>
-            </li>
-
-        </ul>
-        <partial name="_LoginPartial" />
+        </div>
     </nav>
 
-    <div style="position: relative; min-height: 100vh">
 
-        @RenderBody()
+    @RenderBody()
 
-        <footer>
-            <div class="footer-container">
-                <div class="footer-links">
-                    <a href="#">Home</a>
-                    <a href="#">Blog</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="#" class="me-3 footer-link">Home</a>
+                    <a href="#" class="me-3 footer-link">Blog</a>
+                    <a href="#" class="me-3 footer-link">About</a>
+                    <a href="#" class="me-3 footer-link">Contact</a>
                 </div>
-                <div class="additional-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div class="col-md-4">
+                    <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
                 </div>
-                <div class="contact-info">
-                    <p>Email: info@example.com</p>
+                <div class="col-md-4">
+                    <p class="mb-1">Email: info@example.com</p>
                     <p>Phone: +1 123-456-7890</p>
                 </div>
             </div>
-        </footer>
-    </div>
-    
-
-
-
-@*    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now - Blog - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <hr class="my-4">
+            <div class="text-center">
+                &copy; @DateTime.Now
+            </div>
         </div>
-    </footer>*@
+    </footer>
+
     
     @*Text Editor*@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
 
-
+    @*Custom script*@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    @*Jquery + Ui and Bootstrap*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @*SELECT2*@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
+
 
     @await RenderSectionAsync("Scripts", required: false)
 

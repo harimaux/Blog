@@ -2,26 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
-@*<div id="homeVide">
-    <video autoplay muted loop>
-        <source src="/Video/Home/home.mp4" type="video/mp4">
-    </video>
-</div>*@
 
 <div class="homeMain">
-
-    <div class="homeTextInfo">
-        <h1>Blog Space</h1>
-        <p>
-            Join our vibrant community of readers and be part of a space where knowledge is shared, experiences are celebrated, and passions are ignited. Explore our collection of blogs, immerse yourself in captivating narratives, and embark on a journey of discovery.
-
-            Come on in and let the world of words and images unfold before your eyes. Start exploring now!
-        </p>
-        <a class="buttonCustom1" asp-area="Identity" asp-page="/Account/Register">Join Blog Space</a>
+    <div class="container">
+        <div class="row pt-5">
+            <div class="col-lg-6">
+                <h1>Blog Space</h1>
+                <p>
+                    Welcome to this demo website. Experience the power of ASP.NET .NET6 with the rich content editor, enabling you to create captivating posts with images, videos, and more. Please avoid using real addresses while creating an account, as this demo is for illustrative purposes only. Enjoy crafting and browsing visually stunning content!
+                </p>
+                <a class="btn btn-primary bg-gradient" asp-area="Identity" asp-page="/Account/Register">Join Blog Space</a>
+            </div>
+        </div>
     </div>
-@*
-    <div class="homeImage">
-        <img src="/Images/Home/blog235235235.jpg"/>
-    </div>
-*@
 </div>
