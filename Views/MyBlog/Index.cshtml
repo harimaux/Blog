@@ -3,7 +3,7 @@
 @model Blog.Models.MainVM
 
 
-<div class="myBlogSpaceMain container bg-light mt-3 mb-3 rounded-3">
+<div class="myBlogSpaceMain container mt-5 mb-5 pb-2 pt-2 rounded-3 border" style="background-color: rgb(240, 240, 240)">
 
 
     <form method="POST" class="sendPostForm mb-5" asp-action="SavePost" enctype="multipart/form-data">
@@ -22,30 +22,19 @@
 
         <!-- category select -->
 
-        <div class="form-outline mb-4">
+        <div class="form-outline mb-3">
             <label class="form-label labelCategory" asp-for="TextEditor.Category"></label>
             <div class="selectCategory">
                 <select class="form-select SELECTmulti" name="Category" multiple>
-                    <option value="adventure">Adventure</option>
-                    <option value="beauty">Beauty</option>
-                    <option value="culture">Culture</option>
-                    <option value="digital-marketing">Digital Marketing</option>
-                    <option value="eco-friendly-lifestyle">Eco-Friendly Lifestyle</option>
-                    <option value="fashion">Fashion</option>
-                    <option value="fitness">Fitness</option>
-                    <option value="food">Food</option>
-                    <option value="health">Health</option>
-                    <option value="innovation">Innovation</option>
-                    <option value="inspiration">Inspiration</option>
-                    <option value="mindfulness">Mindfulness</option>
-                    <option value="nature">Nature</option>
-                    <option value="outdoor-adventures">Outdoor Adventures</option>
-                    <option value="photography">Photography</option>
-                    <option value="self-care-tips">Self-Care Tips</option>
-                    <option value="sustainability">Sustainability</option>
-                    <option value="technology">Technology</option>
-                    <option value="travel-hacks">Travel Hacks</option>
-                    <option value="wanderlust">Wanderlust</option>
+
+                    @if(Model.PostCategory != null)
+                    {
+                        @foreach (var item in Model.PostCategory)
+                        {
+                            <option value="@item.Id">@item.CategoryName</option>
+                        }
+                    }
+
                 </select>
 
                 <span asp-validation-for="TextEditor.Category" class="text-danger"></span>
@@ -69,12 +58,16 @@
 
     </form>
 
+    <hr />
+    <h1>Your Posts</h1>
+
     <div id="partialViewContainer">
 
         @if (Model.PostsList != null && Model.PostsList.Any())
         {
             @foreach (var post in Model.PostsList)
             {
+                @*<hr class="m-5">*@
                 <div class="fr-wrapper displayPostCustomBox">
 
                     <div class="fr-element fr-view">

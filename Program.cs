@@ -41,4 +41,29 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.Map("/Avatar", async (context) =>
+//    {
+//        await context.Response.WriteAsync("you are in avatar page");
+//    });
+
+//    endpoints.MapGet("/Product", async (context) =>
+//    {
+//        await context.Response.WriteAsync("you are in Products page");
+//    });
+
+//    endpoints.MapPost("/Product", async (context) =>
+//    {
+//        await context.Response.WriteAsync("you are in NEW Product page");
+//    });
+
+//    endpoints.MapRazorPages();
+//});
+
+//app.Run(async (HttpContext context) =>
+//{
+//    await context.Response.WriteAsync("No route set...");
+//});
+
 app.Run();

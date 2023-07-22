@@ -1,0 +1,99 @@
+﻿@page "Avatar"
+@model Blog.Areas.Identity.Pages.Account.Manage.AvatarModel
+@{
+}
+
+<form method="post" enctype="multipart/form-data" asp-page-handler="ChooseAvatar">
+    <div class="modal fade" id="avatarChooseModal" tabindex="-1" role="dialog" aria-labelledby="avatarChooseModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avatarChooseModalLabel">Pick Avatar</h5>
+                    <button type="button" class="btn-close closeModalCustom" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="#" alt="Avatar" class="img-fluid w-100 choosedAvatar">
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <input type="hidden" class="formIdInpyut" value="" name="avatarId"/>
+                    <button type="submit" class="btn btn-success setAvatarBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<h3>Your avatar</h3>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row stockAvatarsBox">
+
+            @if (Model.Mv != null && Model.Mv.StockAvatars != null)
+            {
+                foreach (var item in Model.Mv.StockAvatars)
+                {
+                    <div class="col-6 col-sm-4 col-md-2 avImageBox">
+                        <img src="data:image/png;base64,@item.ImageBase64" class="img-fluid mb-3 shadow-lg stockAvatar" data-value="@item.Id" alt="Avatar">
+                    </div>
+                }
+            }
+
+        </div>
+
+        <!-- Input for uploading a custom avatar -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <label for="customAvatar">Upload Custom Avatar:</label>
+                <input type="file" id="customAvatar" name="customAvatar" accept=".jpg, .jpeg, .png" />
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">Upload Avatar</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+
+            let stockAvatarsBox = document.querySelector('.stockAvatarsBox');
+
+            stockAvatarsBox.addEventListener('click', function (e) {
+
+                if (e.target.matches('.stockAvatar')) {
+
+                    const avatar = e.target;
+
+                    
+                    const avId = parseInt(avatar.getAttribute('data-value'));
+                    $('.formIdInpyut').attr('value', avId);
+
+                    //Sets image in modal
+                    let avatarSrcImage = avatar.getAttribute('src');
+                    $('.choosedAvatar').attr('src', avatarSrcImage);
+
+
+                    //Open/Close modal
+                    $("#avatarChooseModal").modal("show");
+
+                    $('.closeModalCustom').on('click', function() {
+
+                        $("#avatarChooseModal").modal("hide");
+                    });
+
+
+                };
+            });
+
+        });
+
+    </script>
+}

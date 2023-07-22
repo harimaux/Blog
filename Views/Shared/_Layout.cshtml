@@ -30,8 +30,8 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blog Space</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -48,6 +48,7 @@
     </nav>
 
 
+
     @RenderBody()
 
 
@@ -55,10 +56,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <a href="#" class="me-3 footer-link">Home</a>
-                    <a href="#" class="me-3 footer-link">Blog</a>
-                    <a href="#" class="me-3 footer-link">About</a>
-                    <a href="#" class="me-3 footer-link">Contact</a>
+                    <a href="#" class="me-3 footer-link text-light text-decoration-none">Home</a>
+                    <a href="#" class="me-3 footer-link text-light text-decoration-none">Blog</a>
+                    <a href="#" class="me-3 footer-link text-light text-decoration-none">About</a>
+                    <a href="#" class="me-3 footer-link text-light text-decoration-none">Contact</a>
                 </div>
                 <div class="col-md-4">
                     <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -71,7 +72,7 @@
             </div>
             <hr class="my-4">
             <div class="text-center">
-                &copy; @DateTime.Now
+                &copy;Demo project by Lucas Witkowski - @DateTime.Now
             </div>
         </div>
     </footer>

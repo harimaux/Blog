@@ -1,5 +1,4 @@
-﻿
-/* ---------------------- Process post upload ----------------------*/
+﻿/* ---------------------- Process post upload ----------------------*/
 //$(document).ready(function () {
 
 //    $('#createPostForm').submit(function (event) {

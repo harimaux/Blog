@@ -62,6 +62,13 @@ namespace  Blog.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         /// <summary>
+        ///     This is added class for avatar
+        /// </summary>
+        public static string Avatar => "Avatar";
+
+        public static string AvararNavClass(ViewContext viewContext) => PageNavClass(viewContext, Avatar);
+
+        /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>

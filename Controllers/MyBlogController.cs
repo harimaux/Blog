@@ -48,7 +48,13 @@ namespace Blog.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
-            var vm = new MainVM();
+            var vm = new MainVM(_dbContext);
+
+            //Get post categories
+            if(user != null && _dbContext.PostCategory != null)
+            {
+                vm.PostCategory = _dbContext.PostCategory.ToList();
+            }
 
             // Get user posts
             if (user != null && _dbContext.Posts != null)
@@ -82,7 +88,7 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePost(TextEditor formData)
         {
-            var vm = new MainVM();
+            var vm = new MainVM(_dbContext);
 
             if (!ModelState.IsValid)
             {
