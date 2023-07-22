@@ -15,4 +15,16 @@
             </div>
         </div>
     </div>
+
+    <form asp-action="Upload" enctype="multipart/form-data">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required />
+        </div>
+        <div>
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" required accept="image/*" />
+        </div>
+        <button type="submit">Upload</button>
+    </form>
 </div>

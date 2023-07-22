@@ -1,0 +1,18 @@
+﻿@model StockAvatars
+@*
+@if (Model.UserExtraStuff.StockAvatarId != null || Model.UserExtraStuff.StockAvatarId != "")
+{
+    if(Model.StockAvatars != null)
+    {
+        foreach (var avatar in Model.StockAvatars)
+        {
+            if(avatar.Id.ToString() == Model.UserExtraStuff.StockAvatarId)
+            {
+                <div class="col-6 col-sm-4 col-md-2 avImageBox">
+                    <img src="data:image/png;base64,@avatar.ImageBase64" class="img-fluid mb-3 shadow-lg stockAvatar" alt="Avatar">
+                </div>
+            }
+        }
+    }
+
+}*@

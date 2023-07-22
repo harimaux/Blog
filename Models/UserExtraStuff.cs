@@ -9,7 +9,9 @@ namespace Blog.Models
         [Key]
         public int Id { get; set; }
 
-        public byte[]? Avatar { get; set; }
+        public string? StockAvatarId { get; set; }
+
+        public string? CustomAvatarImage { get; set; }
 
         public string? Likes { get; set; }
 
